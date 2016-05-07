@@ -11,11 +11,11 @@ COPY my.cnf /etc/mysql/my.cnf
 COPY mysql_dump.sql /
 COPY restore-data.sh /
 
-RUN /restore-data.sh
-
 VOLUME ["/root/mysql-data","/var/lib/mysql"]
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 EXPOSE 3306
 CMD ["mysqld"]
+
+# RUN /restore-data.sh

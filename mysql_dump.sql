@@ -121,7 +121,7 @@ CREATE TABLE `city` (
 
 LOCK TABLES `city` WRITE;
 /*!40000 ALTER TABLE `city` DISABLE KEYS */;
-INSERT INTO `city` VALUES ('0','南京',NULL),('1','北京',NULL),('2','上海',NULL),('3','广州',NULL),('4','深圳',NULL);
+INSERT INTO `city` VALUES ('0','全部',NULL),('1','北京',NULL),('2','上海',NULL),('3','广州',NULL),('4','南京',NULL);
 /*!40000 ALTER TABLE `city` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -149,7 +149,7 @@ CREATE TABLE `collegeInfo` (
 
 LOCK TABLES `collegeInfo` WRITE;
 /*!40000 ALTER TABLE `collegeInfo` DISABLE KEYS */;
-INSERT INTO `collegeInfo` VALUES ('0','所有学校','0',0),('1','南京大学','1',0),('2','南京邮电大学','1',0),('3','南京理>工大学','1',0),('4','河海大学','1',0),('5','信息工程大学','1',0),('6','东南大学','1',0);
+INSERT INTO `collegeInfo` VALUES ('0','所有学校','0',0),('1','南京大学','1',0),('2','南京邮电大学','1',0),('3','南京理工大学','1',0),('4','河海大学','1',0),('5','信息工程大学','1',0),('6','东南大学','1',0);
 /*!40000 ALTER TABLE `collegeInfo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -773,7 +773,7 @@ begin
         swap,autoShipment,inspection,collegeName,
         matching,recommendation,cityName, userName, portraitPath,merchandiseTypeName,shipmentPrice,imgPath.path,
         userInfo.userID,longitude,latitude
-        from merchandise,userinfo,merchandiseType,imgPath,city,collegeInfo
+        from merchandise,userInfo,merchandiseType,imgPath,city,collegeInfo
 		where userInfo.userID = merchandise.userID
         and merchandise.merchandiseTypeID = merchandiseType.merchandiseTypeID
         and imgPath.merchandiseID = merchandise.merchandiseID
@@ -781,7 +781,7 @@ begin
         and merchandise.college = collegeInfo.collegeID
         and merchandise.merchandiseID  like varMerchandiseID;
 
-        insert into PostedMerchandise
+        insert into postedMerchandise
         (merchandiseID,merchandiseName,currentPrice,
         oldPrice,visitedCount,userID,info,publishedTime,
         swap,autoShipment,inspection,college,
@@ -823,13 +823,13 @@ begin
         where merchandiseList.merchandiseID like new.merchandiseID;
 
 
-        update PostedMerchandise set
+        update postedMerchandise set
         merchandiseName = new.merchandiseName,currentPrice = new.currentPrice,
         oldPrice = new.oldPrice,visitedCount= new.visitedCount,info = new.info,publishedTime=new.publishedTime,
         swap=new.swap,autoShipment=new.autoShipment,inspection=new.inspection,college=new.college,
         merchandiseTypeID=new.merchandiseTypeID,matching=new.matching,recommendation=new.recommendation,city=new.city,
 		longitude=new.longitude, latitude=new.latitude
-        where PostedMerchandise.merchandiseID like new.merchandiseID;
+        where postedMerchandise.merchandiseID like new.merchandiseID;
 end */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -851,7 +851,7 @@ for each row
 begin
         declare varMerchandiseID varchar(100);
         set varMerchandiseID = old.merchandiseID;
-        update PostedMerchandise set status = 'deleted' where PostedMerchandise.merchandiseID like varMerchandiseID;
+        update postedMerchandise set status = 'deleted' where postedMerchandise.merchandiseID like varMerchandiseID;
         delete from merchandiseList where merchandiseList.merchandiseID like varMerchandiseID;
 end */;;
 DELIMITER ;
@@ -1021,7 +1021,7 @@ begin
                 end if;
         elseif(varOrderState = '4') then
                 select currentPrice into varPrice  from merchandise where merchandiseID like varMerchandiseID;
-                update userinfo set account = account + varPrice where userID like new.sellerID;
+                update userInfo set account = account + varPrice where userID like new.sellerID;
         end if;
 end */;;
 DELIMITER ;
@@ -1097,6 +1097,7 @@ CREATE TABLE `postedMerchandise` (
   `merchandiseID` varchar(100) NOT NULL DEFAULT '' COMMENT '自增主键',
   `merchandiseName` varchar(100) DEFAULT NULL COMMENT '商品内容',
   `currentPrice` float DEFAULT NULL COMMENT '现在的价格',
+  `oldPrice` float DEFAULT NULL COMMENT 'Old price', 
   `merchandisePrice` float DEFAULT NULL COMMENT '以前的价格',
   `visitedCount` int(11) DEFAULT NULL COMMENT '访问数',
   `userID` varchar(100) DEFAULT NULL COMMENT '用户名ID',
@@ -1187,6 +1188,7 @@ CREATE TABLE `requirement` (
 
 LOCK TABLES `requirement` WRITE;
 /*!40000 ALTER TABLE `requirement` DISABLE KEYS */;
+INSERT INTO `requirement` VALUES ('63ebab6fa80c9d9f3484f86ce9f4bba8','我需要一个八成新的手机','767871f9d0632e2241cd4b56407d62f9','1','2016-04-15 14:24:51','1','1');
 /*!40000 ALTER TABLE `requirement` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1291,7 +1293,7 @@ CREATE TABLE `token` (
 
 LOCK TABLES `token` WRITE;
 /*!40000 ALTER TABLE `token` DISABLE KEYS */;
-INSERT INTO `token` VALUES ('f20c56321b814012e3171f9ae93ca963','767871f9d0632e2241cd4b56407d62f9','2016-04-10 15:54:35','100');
+INSERT INTO `token` VALUES ('6738285cb504655594342b3724e588fe','767871f9d0632e2241cd4b56407d62f9','2016-05-07 03:01:12','100');
 /*!40000 ALTER TABLE `token` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1324,7 +1326,7 @@ CREATE TABLE `userInfo` (
 
 LOCK TABLES `userInfo` WRITE;
 /*!40000 ALTER TABLE `userInfo` DISABLE KEYS */;
-INSERT INTO `userInfo` VALUES ('767871f9d0632e2241cd4b56407d62f9','158****9635','E822F630F5BF5AED3705D9F3975A9BA2',NULL,NULL,'default_portrait.png',0,'15852909635',NULL,NULL,NULL);
+INSERT INTO `userInfo` VALUES ('767871f9d0632e2241cd4b56407d62f9','158****9635','D0DCBF0D12A6B1E7FBFA2CE5848F3EFF',NULL,NULL,'default_portrait.png',0,'15852909635',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `userInfo` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -1518,4 +1520,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-04-15 12:26:32
+-- Dump completed on 2016-05-07  6:35:31
